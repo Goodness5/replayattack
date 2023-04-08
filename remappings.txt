@@ -1,0 +1,2 @@
+@oz/=lib/openzeppelin-contracts/contracts/
+@uniswap-v2-periphery=lib/v2-periphery/contracts
